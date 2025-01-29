@@ -191,6 +191,8 @@ const NavBar = () => {
       )}
     </FlexBetween>
   );
+  return <div>homepage</div>;
+
 };
 
 export default NavBar;
