@@ -35,9 +35,6 @@ const NavBar = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
-<<<<<<< HEAD
-  return <div>homepage</div>;
-=======
   const neutralLight = theme.palette.neutral?.light || "#f0f0f0"; // Default fallback
   const dark = theme.palette.neutral?.dark || "#333333";
   const background = theme.palette.background.default;
@@ -194,7 +191,6 @@ const NavBar = () => {
       )}
     </FlexBetween>
   );
->>>>>>> feature-branch
 };
 
 export default NavBar;
