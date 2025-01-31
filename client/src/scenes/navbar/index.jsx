@@ -31,7 +31,10 @@ const NavBar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+
+  // ✅ Ensure correct Redux state path
+  const user = useSelector((state) => state.auth?.user || null);
+
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -41,13 +44,22 @@ const NavBar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
-  const fullName = user ? `${user.firstName} ${user.lastName}` : "Guest";
+
+  // ✅ Fix: Ensure user is not null before accessing properties
+  const fullName =
+    user === null ? "Default User" : `${user.firstName} ${user.lastName}`;
+
+
+
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"
-          fontSize="clamp(1rem, 2rem, 2.25rem"
+
+          fontSize="clamp(1rem, 2rem, 2.25rem)"
+
+
           color="primary"
           onClick={() => navigate("/home")}
           sx={{
@@ -73,11 +85,14 @@ const NavBar = () => {
           </FlexBetween>
         )}
       </FlexBetween>
-      {/*DESKTOP NAVBAR */}
+
+      {/* DESKTOP NAVBAR */}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.ode === "dark" ? (
+            {theme.palette.mode === "dark" ? (
+
+     
               <DarkMode sx={{ fontSize: "25px" }} />
             ) : (
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
@@ -86,7 +101,9 @@ const NavBar = () => {
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
-          <FormControl variant="standard" value={fullName}>
+
+          <FormControl variant="standard">
+
             <Select
               value={fullName}
               sx={{
@@ -107,7 +124,13 @@ const NavBar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+
+              {user && (
+                <MenuItem onClick={() => dispatch(setLogout())}>
+                  Log Out
+                </MenuItem>
+              )}
+
             </Select>
           </FormControl>
         </FlexBetween>
@@ -118,7 +141,9 @@ const NavBar = () => {
           <Menu />
         </IconButton>
       )}
-      {/*MOBILE NAVBAR */}
+
+      {/* MOBILE NAVBAR */}
+
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
           position="fixed"
@@ -151,7 +176,9 @@ const NavBar = () => {
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}
             >
-              {theme.palette.ode === "dark" ? (
+
+              {theme.palette.mode === "dark" ? (
+
                 <DarkMode sx={{ fontSize: "25px" }} />
               ) : (
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
@@ -160,7 +187,9 @@ const NavBar = () => {
             <Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} />
-            <FormControl variant="standard" value={fullName}>
+
+            <FormControl variant="standard">
+
               <Select
                 value={fullName}
                 sx={{
@@ -181,9 +210,13 @@ const NavBar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
+
+                {user && (
+                  <MenuItem onClick={() => dispatch(setLogout())}>
+                    Log Out
+                  </MenuItem>
+                )}
+
               </Select>
             </FormControl>
           </FlexBetween>
@@ -191,7 +224,6 @@ const NavBar = () => {
       )}
     </FlexBetween>
   );
-  return <div>homepage</div>;
 
 };
 
